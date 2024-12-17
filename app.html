@@ -1,0 +1,201 @@
+import { useState } from 'react';
+import { Link, Outlet } from 'react-router-dom';
+import { Home, Search, Plus, Edit, Trash } from 'lucide-react';
+
+const App = () => {
+  const [produtos, setProdutos] = useState([
+    { id: 1, nome: 'Produto 1', preco: 10.99 },
+    { id: 2, nome: 'Produto 2', preco: 9.99 },
+  ]);
+
+  const [fornecedores, setFornecedores] = useState([
+    { id: 1, nome: 'Fornecedor 1' },
+    { id: 2, nome: 'Fornecedor 2' },
+  ]);
+
+  const [listaCompra, setListaCompra] = useState([
+    { id: 1, nome: 'Produto 1', quantidade: 2 },
+    { id: 2, nome: 'Produto 2', quantidade: 1 },
+  ]);
+
+  const handleIncluirProduto = () => {
+    setProdutos([...produtos, { id: produtos.length + 1, nome: 'Novo Produto', preco: 0 }]);
+  };
+
+  const handleEditarProduto = (id: number) => {
+    const produto = produtos.find((p) => p.id === id);
+    if (produto) {
+      produto.nome = 'Produto Editado';
+      setProdutos([...produtos]);
+    }
+  };
+
+  const handleExcluirProduto = (id: number) => {
+    setProdutos(produtos.filter((p) => p.id !== id));
+  };
+
+  const handleIncluirFornecedor = () => {
+    setFornecedores([...fornecedores, { id: fornecedores.length + 1, nome: 'Novo Fornecedor' }]);
+  };
+
+  const handleEditarFornecedor = (id: number) => {
+    const fornecedor = fornecedores.find((f) => f.id === id);
+    if (fornecedor) {
+      fornecedor.nome = 'Fornecedor Editado';
+      setFornecedores([...fornecedores]);
+    }
+  };
+
+  const handleExcluirFornecedor = (id: number) => {
+    setFornecedores(fornecedores.filter((f) => f.id !== id));
+  };
+
+  const handleIncluirListaCompra = () => {
+    setListaCompra([...listaCompra, { id: listaCompra.length + 1, nome: 'Novo Produto', quantidade: 0 }]);
+  };
+
+  const handleEditarListaCompra = (id: number) => {
+    const produto = listaCompra.find((p) => p.id === id);
+    if (produto) {
+      produto.nome = 'Produto Editado';
+      setListaCompra([...listaCompra]);
+    }
+  };
+
+  const handleExcluirListaCompra = (id: number) => {
+    setListaCompra(listaCompra.filter((p) => p.id !== id));
+  };
+
+  return (
+    <div className="flex flex-col h-screen">
+      <header className="bg-blue-500 text-white p-4">
+        <nav className="flex justify-between">
+          <Link to="/" className="text-lg font-bold">
+            <Home className="mr-2" />
+            Home
+          </Link>
+          <Link to="/produtos" className="text-lg font-bold">
+            Produtos
+          </Link>
+          <Link to="/fornecedores" className="text-lg font-bold">
+            Fornecedores
+          </Link>
+          <Link to="/lista-compra" className="text-lg font-bold">
+            Lista de Compra
+          </Link>
+        </nav>
+      </header>
+      <main className="flex-1 p-4">
+        <Outlet />
+        <div className="flex flex-col">
+          <h2 className="text-lg font-bold mb-4">Produtos</h2>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr>
+                <th className="border border-gray-400 p-2">ID</th>
+                <th className="border border-gray-400 p-2">Nome</th>
+                <th className="border border-gray-400 p-2">Preço</th>
+                <th className="border border-gray-400 p-2">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {produtos.map((produto) => (
+                <tr key={produto.id}>
+                  <td className="border border-gray-400 p-2">{produto.id}</td>
+                  <td className="border border-gray-400 p-2">{produto.nome}</td>
+                  <td className="border border-gray-400 p-2">{produto.preco}</td>
+                  <td className="border border-gray-400 p-2">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditarProduto(produto.id)}>
+                      <Edit className="mr-2" />
+                      Editar
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleExcluirProduto(produto.id)}>
+                      <Trash className="mr-2" />
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleIncluirProduto}>
+            <Plus className="mr-2" />
+            Incluir
+          </button>
+        </div>
+        <div className="flex flex-col mt-4">
+          <h2 className="text-lg font-bold mb-4">Fornecedores</h2>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr>
+                <th className="border border-gray-400 p-2">ID</th>
+                <th className="border border-gray-400 p-2">Nome</th>
+                <th className="border border-gray-400 p-2">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fornecedores.map((fornecedor) => (
+                <tr key={fornecedor.id}>
+                  <td className="border border-gray-400 p-2">{fornecedor.id}</td>
+                  <td className="border border-gray-400 p-2">{fornecedor.nome}</td>
+                  <td className="border border-gray-400 p-2">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditarFornecedor(fornecedor.id)}>
+                      <Edit className="mr-2" />
+                      Editar
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleExcluirFornecedor(fornecedor.id)}>
+                      <Trash className="mr-2" />
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleIncluirFornecedor}>
+            <Plus className="mr-2" />
+            Incluir
+          </button>
+        </div>
+        <div className="flex flex-col mt-4">
+          <h2 className="text-lg font-bold mb-4">Lista de Compra</h2>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr>
+                <th className="border border-gray-400 p-2">ID</th>
+                <th className="border border-gray-400 p-2">Nome</th>
+                <th className="border border-gray-400 p-2">Quantidade</th>
+                <th className="border border-gray-400 p-2">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listaCompra.map((produto) => (
+                <tr key={produto.id}>
+                  <td className="border border-gray-400 p-2">{produto.id}</td>
+                  <td className="border border-gray-400 p-2">{produto.nome}</td>
+                  <td className="border border-gray-400 p-2">{produto.quantidade}</td>
+                  <td className="border border-gray-400 p-2">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditarListaCompra(produto.id)}>
+                      <Edit className="mr-2" />
+                      Editar
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleExcluirListaCompra(produto.id)}>
+                      <Trash className="mr-2" />
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleIncluirListaCompra}>
+            <Plus className="mr-2" />
+            Incluir
+          </button>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default App;
